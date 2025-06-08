@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <title>BARZAN MIIXER</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
+        }
+        
+        body {
+            background-color: black;
+            color: white;
+            font-family: 'Arial', sans-serif;
+            overflow-x: hidden;
+            touch-action: manipulation;
+            -webkit-touch-callout: none;
+            -webkit-text-size-adjust: 100%;
+            -ms-touch-action: manipulation;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+        }
+        /* Loading Page */
+        
+        .loading-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .loading-squares {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .square {
+            width: 40px;
+            height: 40px;
+            background-color: #333;
+            border: 2px solid #555;
+            transition: all 0.3s ease;
+        }
+        /* Main Page */
+        
+        .main-page {
+            display: none;
+            min-height: 100vh;
+            padding: 20px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            height: 100%;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+        }
+        /* Header */
+        
+        .header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 2px solid #333;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .header-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            animation: rainbow 2s infinite;
+        }
+        
+        @keyframes rainbow {
+            0% {
+                color: #ff0000;
+            }
+            16% {
+                color: #ff8000;
+            }
+            33% {
+                color: #ffff00;
+            }
+            50% {
+                color: #00ff00;
+            }
+            66% {
+                color: #0080ff;
+            }
+            83% {
+                color: #8000ff;
+            }
+            100% {
+                color: #ff0000;
+            }
+        }
+        
+        .search-container {
+            position: absolute;
+            left: 20px;
+        }
+        
+        .search-icon {
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            fill: white;
+            transition: fill 0.3s;
+        }
+        
+        .search-icon:hover {
+            fill: #ffffff;
+        }
+        
+        .search-box {
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 40px;
+            padding: 7px 17px;
+            background-color: #222;
+            border: 1px solid #555;
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+            border-radius: 3px;
+            display: none;
+            text-align: center;
+            -webkit-user-select: text;
+            -moz-user-select: text;
+            -ms-user-select: text;
+            user-select: text;
+        }
+        /* Buttons and clickable elements */
+        
+        button,
+        input,
+        audio,
+        .search-icon,
+        .music-item {
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
+            border: none;
+        }
+        
+        button:focus,
+        input:focus,
+        audio:focus {
+            outline: none;
+            box-shadow: none;
+        }
+        
+        .music-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .music-item {
+            margin-bottom: 40px;
+            text-align: center;
+            background: linear-gradient(45deg, #1a1a1a, #2a2a2a);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #444;
+            transition: transform 0.3s ease;
+        }
+        
+        .music-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 255, 0, 0.2);
+        }
+        
+        .music-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #00ff00;
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+            }
+            to {
+                text-shadow: 0 0 20px rgba(0, 255, 0, 0.8), 0 0 30px rgba(0, 255, 0, 0.3);
+            }
+        }
+        
+        .audio-player {
+            width: 100%;
+            margin-top: 15px;
+            background-color: #33333300;
+            border-radius: 25px;
+            padding: 5px;
+        }
+        
+        .audio-player::-webkit-media-controls-panel {
+            background-color: #ffffff;
+        }
+        /* Responsive */
+        
+        @media (max-width: 768px) {
+            .header-title {
+                font-size: 1.8rem;
+            }
+            .music-title {
+                font-size: 1.4rem;
+            }
+            .search-box {
+                width: 250px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Loading Page -->
+    <div class="loading-page" id="loadingPage">
+        <div class="loading-squares">
+            <div class="square" id="square1"></div>
+            <div class="square" id="square2"></div>
+            <div class="square" id="square3"></div>
+            <div class="square" id="square4"></div>
+            <div class="square" id="square5"></div>
+        </div>
+    </div>
+
+    <!-- Main Page -->
+    <div class="main-page" id="mainPage">
+        <!-- Header -->
+        <div class="header">
+            <div class="search-container">
+                <svg class="search-icon" id="searchIcon" viewBox="0 0 28 28">
+                    <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                </svg>
+            </div>
+            <div class="header-title">𝐁𝐀𝐑𝐙𝐀𝐍 𝐌𝐈𝐈𝐗𝐄𝐑</div>
+            <input type="text" class="search-box" id="searchBox" placeholder="کد موزیک">
+        </div>
+
+        <!-- Music Container -->
+        <div class="music-container">
+            <div class="music-item">
+                <div class="music-title">𝗕𝗔𝗥𝗭𝗔𝗡 𝗠𝗜𝗜𝗫𝗘𝗥 𝟬𝟬𝟭</div>
+                <audio class="audio-player" controls>
+                    <source src="#" type="audio/mpeg">
+                    مرورگر شما از تگ audio پشتیبانی نمی‌کند.
+                </audio>
+            </div>
+
+            <div class="music-item">
+                <div class="music-title">𝗕𝗔𝗥𝗭𝗔𝗡 𝗠𝗜𝗜𝗫𝗘𝗥 𝟬𝟬𝟮</div>
+                <audio class="audio-player" controls>
+                    <source src="#" type="audio/mpeg">
+                    مرورگر شما از تگ audio پشتیبانی نمی‌کند.
+                </audio>
+            </div>
+
+            <div class="music-item">
+                <div class="music-title">𝗕𝗔𝗥𝗭𝗔𝗡 𝗠𝗜𝗜𝗫𝗘𝗥 𝟬𝟬𝟯</div>
+                <audio class="audio-player" controls>
+                    <source src="#" type="audio/mpeg">
+                    مرورگر شما از تگ audio پشتیبانی نمی‌کند.
+                </audio>
+            </div>
+
+            <div class="music-item">
+                <div class="music-title">𝗕𝗔𝗥𝗭𝗔𝗡 𝗠𝗜𝗜𝗫𝗘𝗥 𝟬𝟬𝟰</div>
+                <audio class="audio-player" controls>
+                    <source src="#" type="audio/mpeg">
+                    مرورگر شما از تگ audio پشتیبانی نمی‌کند.
+                </audio>
+            </div>
+
+            <div class="music-item">
+                <div class="music-title">𝗕𝗔𝗥𝗭𝗔𝗡 𝗠𝗜𝗜𝗫𝗘𝗥 𝟬𝟬𝟱</div>
+                <audio class="audio-player" controls>
+                    <source src="#" type="audio/mpeg">
+                    مرورگر شما از تگ audio پشتیبانی نمی‌کند.
+                </audio>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Loading Animation
+        window.addEventListener('load', function() {
+            const squares = document.querySelectorAll('.square');
+            const colors = ['#00ff00', '#0080ff', '#ff0000', '#8000ff', '#ff8000'];
+
+            // Animate squares
+            setTimeout(() => squares[0].style.backgroundColor = colors[0], 1000);
+            setTimeout(() => squares[1].style.backgroundColor = colors[1], 2000);
+            setTimeout(() => squares[2].style.backgroundColor = colors[2], 3000);
+            setTimeout(() => squares[3].style.backgroundColor = colors[3], 4000);
+            setTimeout(() => {
+                squares[4].style.backgroundColor = colors[4];
+                // Hide loading page and show main page
+                setTimeout(() => {
+                    document.getElementById('loadingPage').style.display = 'none';
+                    document.getElementById('mainPage').style.display = 'block';
+                }, 500);
+            }, 5000);
+        });
+
+        // Search functionality
+        const searchIcon = document.getElementById('searchIcon');
+        const searchBox = document.getElementById('searchBox');
+        const headerTitle = document.querySelector('.header-title');
+        const searchContainer = document.querySelector('.search-container');
+
+        // Prevent zoom on double tap
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function(event) {
+            const now = (new Date()).getTime();
+            if (now - lastTouchEnd <= 300) {
+                event.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+
+        // Disable pinch zoom
+        document.addEventListener('gesturestart', function(e) {
+            e.preventDefault();
+        });
+
+        document.addEventListener('gesturechange', function(e) {
+            e.preventDefault();
+        });
+
+        document.addEventListener('gestureend', function(e) {
+            e.preventDefault();
+        });
+
+        // Disable zoom with wheel
+        document.addEventListener('wheel', function(e) {
+            if (e.ctrlKey) {
+                e.preventDefault();
+            }
+        }, {
+            passive: false
+        });
+
+        // Disable keyboard zoom
+        document.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && (e.which === 61 || e.which === 107 || e.which === 173 || e.which === 109 || e.which === 187 || e.which === 189)) {
+                e.preventDefault();
+            }
+        });
+
+        searchIcon.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            if (searchBox.style.display === 'none' || searchBox.style.display === '') {
+                searchBox.style.display = 'block';
+                headerTitle.style.display = 'none';
+                setTimeout(() => searchBox.focus(), 100);
+            } else {
+                searchBox.style.display = 'none';
+                headerTitle.style.display = 'block';
+            }
+        });
+
+        // Hide search box when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!searchIcon.contains(event.target) && !searchBox.contains(event.target)) {
+                searchBox.style.display = 'none';
+                headerTitle.style.display = 'block';
+            }
+        });
+
+        // Search functionality
+        searchBox.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const musicItems = document.querySelectorAll('.music-item');
+
+            musicItems.forEach(item => {
+                const title = item.querySelector('.music-title').textContent.toLowerCase();
+                if (title.includes(searchTerm)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
